@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <title>School Timetable Generator</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="top-header">
+
+        <div class="header-content">
+
+            <div>
+                <h1>School Timetable Generator</h1>
+
+                <p>
+                    Create, save and manage your school timetable
+                </p>
+            </div>
+
+            <button
+                id="menuBtn"
+                class="menu-btn"
+                type="button"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         APP LAYOUT
+    ====================================================== -->
+
+    <div class="app-layout">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside
+            id="sidebar"
+            class="sidebar"
+        >
+
+            <nav class="sidebar-nav">
+
+                <button
+                    class="nav-item active"
+                    data-section="dashboard"
+                    type="button"
+                >
+                    🏠 Dashboard
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="classes"
+                    type="button"
+                >
+                    🏫 Classes
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="subjects"
+                    type="button"
+                >
+                    📚 Subjects
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="teachers"
+                    type="button"
+                >
+                    👨‍🏫 Teachers
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="periods"
+                    type="button"
+                >
+                    ⏰ Periods
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="timetable"
+                    type="button"
+                >
+                    📅 Timetable
+                </button>
+
+            </nav>
+
+
+            <div class="sidebar-actions">
+
+                <button
+                    id="loadSampleBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                >
+                    Load Sample Data
+                </button>
+
+                <button
+                    id="clearAllBtn"
+                    class="btn btn-danger"
+                    type="button"
+                >
+                    Clear All Data
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- =================================================
+                 DASHBOARD
+            ================================================== -->
+
+            <section
+                id="dashboard"
+                class="content-section active"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Dashboard</h2>
+
+                        <p>
+                            Set up your school information and
+                            timetable settings.
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="generateFromDashboard"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Generate All Timetables
+                    </button>
+
+                </div>
+
+
+                <!-- SCHOOL INFORMATION -->
+
+                <div class="card">
+
+                    <h3>School Information</h3>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="schoolName">
+                                School Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="schoolName"
+                                placeholder="Enter school name"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="session">
+                                Academic Session
+                            </label>
+
+                            <input
+                                type="text"
+                                id="session"
+                                placeholder="e.g. 2026/2027"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="term">
+                                Term
+                            </label>
+
+                            <select id="term">
+
+                                <option value="First Term">
+                                    First Term
+                                </option>
+
+                                <option value="Second Term">
+                                    Second Term
+                                </option>
+
+                                <option value="Third Term">
+                                    Third Term
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        id="saveSchoolBtn"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Save School Information
+                    </button>
+
+                </div>
+
+
+                <!-- STATISTICS -->
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <span>Classes</span>
+
+                        <strong id="classCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <span>Subjects</span>
+
+                        <strong id="subjectCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <span>Teachers</span>
+
+                        <strong id="teacherCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <span>Periods</span>
+
+                        <strong id="periodCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GENERATOR SETTINGS -->
+
+                <div class="card">
+
+                    <h3>Generator Settings</h3>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="schoolDays">
+                                School Days Per Week
+                            </label>
+
+                            <select id="schoolDays">
+
+                                <option value="5">
+                                    5 Days
+                                </option>
+
+                                <option value="6">
+                                    6 Days
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="maxAttempts">
+                                Maximum Generation Attempts
+                            </label>
+
+                            <input
+                                type="number"
+                                id="maxAttempts"
+                                min="100"
+                                max="5000"
+                                value="500"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="generatorMessage"
+                        class="alert hidden"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 CLASSES
+            ================================================== -->
+
+            <section
+                id="classes"
+                class="content-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Classes</h2>
+
+                        <p>
+                            Add the classes that need timetables.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <form id="classForm">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="className">
+                                    Class Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="className"
+                                    placeholder="e.g. JSS 1"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="classArm">
+                                    Arm
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="classArm"
+                                    placeholder="e.g. A"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add Class
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Class</th>
+
+                                <th>Arm</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="classesTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SUBJECTS
+            ================================================== -->
+
+            <section
+                id="subjects"
+                class="content-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Subjects</h2>
+
+                        <p>
+                            Add subjects and how many times
+                            they should appear each week.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <form id="subjectForm">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="subjectName">
+                                    Subject Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="subjectName"
+                                    placeholder="e.g. Mathematics"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="subjectCode">
+                                    Subject Code
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="subjectCode"
+                                    placeholder="e.g. MTH"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="weeklyFrequency">
+                                    Weekly Frequency
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="weeklyFrequency"
+                                    min="1"
+                                    value="4"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add Subject
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Subject</th>
+
+                                <th>Code</th>
+
+                                <th>Frequency</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="subjectsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TEACHERS
+            ================================================== -->
+
+            <section
+                id="teachers"
+                class="content-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Teachers</h2>
+
+                        <p>
+                            A teacher can teach multiple subjects
+                            and multiple classes.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <form id="teacherForm">
+
+                        <div class="form-grid">
+
+
+                            <!-- TEACHER NAME -->
+
+                            <div class="form-group">
+
+                                <label for="teacherName">
+                                    Teacher Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="teacherName"
+                                    placeholder="e.g. John Doe"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- MULTIPLE SUBJECTS -->
+
+                            <div class="form-group">
+
+                                <label for="teacherSubject">
+                                    Subjects Taught
+                                </label>
+
+                                <select
+                                    id="teacherSubject"
+                                    multiple
+                                    size="6"
+                                ></select>
+
+                                <small>
+                                    Select all subjects this
+                                    teacher can teach.
+                                </small>
+
+                            </div>
+
+
+                            <!-- MULTIPLE CLASSES -->
+
+                            <div class="form-group">
+
+                                <label for="teacherClasses">
+                                    Classes Taught
+                                </label>
+
+                                <select
+                                    id="teacherClasses"
+                                    multiple
+                                    size="6"
+                                ></select>
+
+                                <small>
+                                    Select all classes this
+                                    teacher can teach.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add Teacher
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Teacher</th>
+
+                                <th>Subjects</th>
+
+                                <th>Classes</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="teachersTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PERIODS
+            ================================================== -->
+
+            <section
+                id="periods"
+                class="content-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Periods</h2>
+
+                        <p>
+                            Define the daily periods used by
+                            the timetable.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <form id="periodForm">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="periodName">
+                                    Period Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="periodName"
+                                    placeholder="e.g. Period 1"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="startTime">
+                                    Start Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    id="startTime"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="endTime">
+                                    End Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    id="endTime"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add Period
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Period</th>
+
+                                <th>Start</th>
+
+                                <th>End</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="periodsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TIMETABLE
+            ================================================== -->
+
+            <section
+                id="timetable"
+                class="content-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Timetable</h2>
+
+                        <p>
+                            Generate and view the timetable
+                            for all classes.
+                        </p>
+
+                    </div>
+
+
+                    <div class="button-group">
+
+                        <button
+                            id="generateBtn"
+                            class="btn btn-primary"
+                            type="button"
+                        >
+                            Generate All Timetables
+                        </button>
+
+
+                        <button
+                            id="printBtn"
+                            class="btn btn-secondary"
+                            type="button"
+                        >
+                            Print
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="form-group">
+
+                        <label for="classSelector">
+                            View Class Timetable
+                        </label>
+
+                        <select id="classSelector">
+
+                            <option value="">
+                                Select a class
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="timetableContainer"
+                    class="card"
+                ></div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         EDIT TEACHER MODAL
+    ====================================================== -->
+
+    <div
+        id="editModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <button
+                id="closeModalBtn"
+                class="modal-close"
+                type="button"
+            >
+                ×
+            </button>
+
+
+            <h3>Edit Teacher</h3>
+
+
+            <div class="form-group">
+
+                <label for="editTeacher">
+                    Teacher Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editTeacher"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="editSubject">
+                    Subjects Taught
+                </label>
+
+                <select
+                    id="editSubject"
+                    multiple
+                    size="6"
+                ></select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="editClasses">
+                    Classes Taught
+                </label>
+
+                <select
+                    id="editClasses"
+                    multiple
+                    size="6"
+                ></select>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancelEditBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    id="saveEditBtn"
+                    class="btn btn-primary"
+                    type="button"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
