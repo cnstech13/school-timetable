@@ -5,7 +5,7 @@
   "start_url": "/school-timetable/",
   "scope": "/school-timetable/",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "background_color": "#0b1f3a",
   "theme_color": "#0b1f3a",
   "icons": [
